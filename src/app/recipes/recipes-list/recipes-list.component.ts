@@ -8,7 +8,8 @@ import {Recipe} from '../recipes.model';
 })
 export class RecipesListComponent implements OnInit {
   recipes: Recipe[] = [
-    new Recipe('A test Recipe', 'This is simply a test', 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.bbcgoodfood.com%2Fsites%2Fdefault%2Ffiles%2Fstyles%2Fcategory_retina%2Fpublic%2Frecipe-collections%2Fcollection-image%2F2013%2F05%2Fnext-level-fish-pie.jpg%3Fitok%3DNDSAapTQ&imgrefurl=https%3A%2F%2Fwww.bbcgoodfood.com%2Frecipes%2Fcategory%2Fdishes&docid=H-lSPnHKJkIbXM&tbnid=nGHuuBd0wNCkfM%3A&vet=10ahUKEwi0xYfTw4zjAhXHxoUKHWinDGQQMwhTKBEwEQ..i&w=410&h=370&bih=1008&biw=1920&q=recipe%20food&ved=0ahUKEwi0xYfTw4zjAhXHxoUKHWinDGQQMwhTKBEwEQ&iact=mrc&uact=8')
+    new Recipe('A test Recipe', 'This is simply a test', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRkEbtobQJFiRXOQR1jKIXw5R3QhqlQP9AAjFniJk6qagnchv1w'),
+    new Recipe('A test Recipe', 'This is simply a test', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCRkEbtobQJFiRXOQR1jKIXw5R3QhqlQP9AAjFniJk6qagnchv1w')
   ]
   constructor() { }
 
