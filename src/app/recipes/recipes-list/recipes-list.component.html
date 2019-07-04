@@ -5,7 +5,7 @@
 </div>
 <div class="row">
     <div class="co-xs-12">
-        <app-recipes-item *ngFor="let recipeEl of recipes" [recipe]='recipeEl'>
+        <app-recipes-item *ngFor="let recipeEl of recipes" [recipe]='recipeEl' (recipeSelected)="onRecipeSelected(recipeEl)">
         </app-recipes-item>
 
     </div>
