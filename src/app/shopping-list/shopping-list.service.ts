@@ -15,4 +15,11 @@ export class ShoppingListService {
         this.ingredients.push(ingredient);
         this.ingredientsChanged.emit(this.ingredients.slice())
     }
+    addIngredients(ingredients: Ingredient[]){
+        //for(let ingredient of ingredients){
+         //   this.ingredientAdded(ingredient) //Clasic method
+        //}
+        this.ingredients.push(...ingredients); // pushing the array splited in single elements with '...'
+        this.ingredientsChanged.emit(this.ingredients.slice())
+    }
 }
