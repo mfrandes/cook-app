@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, } from '@angular/core';
-import { Ingredient} from '../../shared/ingredient.model';
+import { Ingredient } from '../../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -10,13 +10,13 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./shopping-edit.component.css']
 })
 export class SoppingEditComponent implements OnInit, OnDestroy {
-  @ViewChild('f', {static: false})  slForm : NgForm;
+  @ViewChild('f', { static: false }) slForm: NgForm;
   subscription: Subscription;
-  editMode= false;
-  editedItemIndex: number; 
+  editMode = false;
+  editedItemIndex: number;
   editedItem: Ingredient;
-  
-  
+
+
   constructor(private slService: ShoppingListService) { }
 
   ngOnInit() {
@@ -35,7 +35,7 @@ export class SoppingEditComponent implements OnInit, OnDestroy {
   onSubmit(form: NgForm) {
     const value = form.value;
     const newIngredient = new Ingredient(value.name, value.amount);
-    if (this.editMode){
+    if (this.editMode) {
       this.slService.updateIngredient(this.editedItemIndex, newIngredient)
     } else {
       this.slService.addIngredient(newIngredient);
@@ -43,8 +43,13 @@ export class SoppingEditComponent implements OnInit, OnDestroy {
     this.editMode = false;
     this.slForm.reset()
   }
-
-  ngOnDestroy(){
+  onClear() {
+    this.slForm.reset();
+    this.editMode = false;
+  }
+  ngOnDestroy() {
     this.subscription.unsubscribe()
   }
+
+
 }
