@@ -10,12 +10,12 @@ export class ShoppingListService {
         new Ingredient('Appels', 5),
         new Ingredient('Tomato', 2)
     ];
-    getIngredients() {
+    getIngredient() {
         return this.ingredients.slice();
     }
 
 
-    getIngredient(index: number){
+    getIngredientToEdit(index: number){
         return this.ingredients[index];
     }
 
@@ -26,5 +26,9 @@ export class ShoppingListService {
     addIngredients(ingredients: Ingredient[]){
         this.ingredients.push(...ingredients);
         this.ingredientsChanges.next(this.ingredients.slice())
+    }
+    updateIngredient(index: number, newIngredient: Ingredient){
+        this.ingredients[index] = newIngredient;
+        this.ingredientsChanges.next(this.ingredients.slice());
     }
 }
