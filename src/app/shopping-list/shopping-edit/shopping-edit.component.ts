@@ -40,13 +40,17 @@ export class SoppingEditComponent implements OnInit, OnDestroy {
     } else {
       this.slService.addIngredient(newIngredient);
     }
-    this.editMode = false;
-    this.slForm.reset()
+    this.onClear()
   }
   onClear() {
     this.slForm.reset();
     this.editMode = false;
   }
+  onDeleteList(){
+    this.slService.deleteIngredient(this.editedItemIndex);
+    this.onClear()
+  }
+
   ngOnDestroy() {
     this.subscription.unsubscribe()
   }
