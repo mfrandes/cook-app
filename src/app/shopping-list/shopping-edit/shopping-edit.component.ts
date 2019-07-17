@@ -32,7 +32,7 @@ export class SoppingEditComponent implements OnInit, OnDestroy {
       }
     )
   }
-  onAddItem(form: NgForm) {
+  onSubmit(form: NgForm) {
     const value = form.value;
     const newIngredient = new Ingredient(value.name, value.amount);
     if (this.editMode){
@@ -40,8 +40,10 @@ export class SoppingEditComponent implements OnInit, OnDestroy {
     } else {
       this.slService.addIngredient(newIngredient);
     }
+    this.editMode = false;
+    this.slForm.reset()
   }
-  
+
   ngOnDestroy(){
     this.subscription.unsubscribe()
   }
