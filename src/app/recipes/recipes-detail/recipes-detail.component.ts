@@ -30,4 +30,8 @@ this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients)
     //this.router.navigate(['edit'], {relativeTo: this.route}); best solution
     this.router.navigate(['../', this.id, 'edit'], {relativeTo: this.route}) // complex solution
   }
+  onDelete(){
+    this.recipeService.deleteRecipe(this.id);
+    this.router.navigate(['../'], {relativeTo: this.route})
+  }
 }
