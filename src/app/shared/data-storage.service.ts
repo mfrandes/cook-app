@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Recipe } from '../recipes/recipes.model';
 import { RecipeService } from '../recipes/recipe.service';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
@@ -17,17 +17,25 @@ export class DataStorageService {
         })
     }
     fetchRecipes() {
-        this.http
+        return this.http
             .get<Recipe[]>('https://ng-recipee-book-3ed11.firebaseio.com/recipes.json')
-            .pipe(map(recipes => {
+            .pipe
+                (map(recipes => {
                 return recipes.map(recipe => {
-                    return {...recipe, ingredients: recipe.ingredients? recipe.ingredients :[]};
+                    return {...recipe, ingredients: recipe.ingredients? recipe.ingredients :[]
+                    };
                 });
-            }))
-            .subscribe(
-                (recipe: Recipe[]) => {
-                    this.recipeService.setRecipes(recipe);
-                }
+                }),
+                tap(recipes => {
+                    this.recipeService.setRecipes(recipes);
+                })
             );
     }
 }
+
+/* Resolving Data Before Loading 
+--> from recipe-resolve.ts
+    we have to add the tap operator need import, this allows us to execute code in ower hhtp request without alterig the data that tunneled trought that observabele, 
+    we will not subscribe here enimore, instead we need to to return and subscribe were we need to (ex. header.component)
+after subscribing --> recipe-resolver.service.ts
+*/
