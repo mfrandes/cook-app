@@ -6,10 +6,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./auth.component.css']
 })
 export class AuthComponent implements OnInit {
+  isLogIn = true;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  onSwitchMode(){
+    this.isLogIn = !this.isLogIn;
   }
 
 }
