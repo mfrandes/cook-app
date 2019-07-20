@@ -2,16 +2,22 @@ import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Recipe } from './recipes.model';
 import { DataStorageService } from '../shared/data-storage.service';
+import { RecipeService } from './recipe.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RecipeResolverService implements Resolve<Recipe[]> {
 
-  constructor(private dataStorageService: DataStorageService) { }
+  constructor(private dataStorageService: DataStorageService, private recipesService: RecipeService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.dataStorageService.fetchRecipes(); 
+    const recipes = this.recipesService.getRecipes();
+    if (recipes.length === 0) {
+      return this.dataStorageService.fetchRecipes(); 
+    } else {
+      return recipes;
+    }
     /*we don"t need to suscribe, the resolver will subscribe for me */
   }
 
@@ -26,4 +32,10 @@ The goal is to return eather a array of recipes witch we can"t becouse we need t
 --> bach here 
 we will return fetchRecipe from dataStastorege we need no subscribe resolver will subscribe for us
 We need to apply the resolve in app-routing.module.ts
+*/
+
+/* Fixing a Bug with the Resolver
+if we fetch recipes and we edit we cant save them, this is a fix
+solution is to check if we have recipes and fetch new only if we don't:
+inject recipesService, after theat we can get the recepes from service and we can check if we have with a if
 */
