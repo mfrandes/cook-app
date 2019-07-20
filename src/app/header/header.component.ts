@@ -14,6 +14,9 @@ export class HeaderComponent {
         this.featureSelected.emit(feature);
     }
     onSaveData() {
-        this.dataStorage.storeRecipes()
+        this.dataStorage.storeRecipes();
+    }
+    onFetchData(){
+        this.dataStorage.fetchRecipes();
     }
 }
