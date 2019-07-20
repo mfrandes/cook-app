@@ -9,7 +9,7 @@ export class RecipeService {
     recipesChanged = new Subject<Recipe[]>();
 
     constructor(private slService: ShoppingListService) { }
-
+/*
     private recipes: Recipe[] = [
         new Recipe('A tasty Schnitzel', 'A super tasty Schnitzel - just awsume!', 'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
             [
@@ -20,7 +20,8 @@ export class RecipeService {
             new Ingredient('Buns', 2),
             new Ingredient('Meat', 1),
         ])
-    ]
+    ]*/
+    private recipes: Recipe[] = [];
     setRecipes(recipes: Recipe[]){
         this.recipes = recipes;
         this.recipesChanged.next(this.recipes.slice());
