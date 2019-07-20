@@ -14,7 +14,11 @@ export class HeaderComponent {
         this.featureSelected.emit(feature);
     }
     onSaveData() {
+        if(confirm("Are you shure you want to save recipes in the database?")){
         this.dataStorage.storeRecipes();
+        } else{
+            // do nothing :}
+        }
     }
     onFetchData(){
         this.dataStorage.fetchRecipes().subscribe();
