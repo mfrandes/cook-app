@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { throwError, Subject } from 'rxjs';
+import { User } from './user.module';
 
 export interface AuthResponseData {
   kind: string,
@@ -17,6 +18,7 @@ export interface AuthResponseData {
   providedIn: 'root'
 })
 export class AuthService {
+  user = new Subject<User>();
 
   constructor(private http: HttpClient) { }
 
@@ -26,7 +28,17 @@ export class AuthService {
         email: email,
         password: password,
         returnSecureToken: true
-      }).pipe(catchError(this.hadleError));
+      }).pipe(
+        catchError(this.hadleError),
+        tap(resData => {
+          this.handleAuthentification(
+            resData.email,
+            resData.localId,
+            resData.idToken,
+            +resData.expiresIn
+          )
+        }
+        ));
   }
   login(email: string, password: string) {
     return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB2QU8W9bPNv-vnkX_7YA6gSZOcEfqdhqk',
@@ -34,8 +46,32 @@ export class AuthService {
         email: email,
         password: password,
         returnSecureToken: true
-      }).pipe(catchError(this.hadleError));
+      }).pipe(
+        catchError(this.hadleError),
+        tap(resData => {
+          this.handleAuthentification(
+            resData.email,
+            resData.localId,
+            resData.idToken,
+            +resData.expiresIn
+          )
+        })
+      );
   }
+
+  private handleAuthentification(
+    email: string,
+    id: string,
+    token: string,
+    expiresIn: number
+  ) {
+    const expirationDate = new Date(
+      new Date().getTime() + expiresIn * 1000
+    )
+    const user = new User(email, id, token, expirationDate)
+    this.user.next(user)
+  }
+
   private hadleError(errorRes: HttpErrorResponse) {
     let errorMessage = 'An unknown error accurred!';
     if (!errorRes.error || !errorRes.error.error) {
