@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
-interface AuthResponseData{
+export interface AuthResponseData{
   kind: string,
   idToken: string ,
   email: string,
   refreshToken: string,
   expiresIn: string,
-  localId: string
+  localId: string,
+  registered?: boolean /* to be able to use it for bouth singn up and logg in the ? informs this is optional*/
 }
 
 @Injectable({
@@ -37,6 +38,14 @@ export class AuthService {
       return throwError(errorMessage);
     }))
   }
+  login(email: string, password:string){
+    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB2QU8W9bPNv-vnkX_7YA6gSZOcEfqdhqk',
+    {
+      email: email,
+      password: password,
+      returnSecureToken: true
+    })
+  }
 }
 
 /* Sign up
@@ -53,4 +62,10 @@ In firebase we have several error messages we can check with a swich statement b
 we can check if the error response dose not have a error key to avoid the switch to fail and we will trow erro (an abservabele that wraps ower error message) otherwise we will make it in to the switch.
 
 Now that the error conversion happens in the authService, in the auth componenet in the error case we get only a observable that includes one error message we can provide it to our template
+*/
+/*
+Login proces
+We nned to send a request, we need to send a request, in firebase we we get all details we need like the signup proces don"t forget to add the API KEY
+Again we only prepare the observebele here sow wenned to return it and subscribe to it in authComponent.ts
+we alsow need to export AuthResponseData to use it in authComponent
 */
