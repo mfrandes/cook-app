@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
-import { throwError, Subject } from 'rxjs';
+import { throwError, BehaviorSubject } from 'rxjs';
 import { User } from './user.module';
 
 export interface AuthResponseData {
@@ -18,8 +18,8 @@ export interface AuthResponseData {
   providedIn: 'root'
 })
 export class AuthService {
-  user = new Subject<User>();
-
+  user = new BehaviorSubject<User>(null); 
+/* Behavior subject allows us to subscribe even at a latere time long after the subject was fired */
   constructor(private http: HttpClient) { }
 
   signup(email: string, password: string) {
