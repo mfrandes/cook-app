@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
-export interface AuthResponseData{
+export interface AuthResponseData {
   kind: string,
-  idToken: string ,
+  idToken: string,
   email: string,
   refreshToken: string,
   expiresIn: string,
@@ -20,31 +20,38 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  signup(email: string, password: string){
-    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB2QU8W9bPNv-vnkX_7YA6gSZOcEfqdhqk', 
-    {
-      email: email,
-      password: password,
-      returnSecureToken: true
-    }).pipe(catchError( errorRes => {
-      let errorMessage = 'An unknown error accurred!';
-      if(!errorRes.error || !errorRes.error.error){
-        return throwError(errorMessage);
-      }
-      switch(errorRes.error.error.message){
-        case 'EMAIL_EXISTS':
-          errorMessage = 'This email already in use!'
-      }
-      return throwError(errorMessage);
-    }))
+  signup(email: string, password: string) {
+    return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB2QU8W9bPNv-vnkX_7YA6gSZOcEfqdhqk',
+      {
+        email: email,
+        password: password,
+        returnSecureToken: true
+      }).pipe(catchError(this.hadleError));
   }
-  login(email: string, password:string){
+  login(email: string, password: string) {
     return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB2QU8W9bPNv-vnkX_7YA6gSZOcEfqdhqk',
-    {
-      email: email,
-      password: password,
-      returnSecureToken: true
-    })
+      {
+        email: email,
+        password: password,
+        returnSecureToken: true
+      }).pipe(catchError(this.hadleError));
+  }
+  private hadleError(errorRes: HttpErrorResponse) {
+    let errorMessage = 'An unknown error accurred!';
+    if (!errorRes.error || !errorRes.error.error) {
+      return throwError(errorMessage);
+    }
+    switch (errorRes.error.error.message) {
+      case 'EMAIL_EXISTS':
+        errorMessage = 'This email already in use!'
+        break;
+      case 'EMAIL_NOT_FOUND':
+        errorMessage = 'This email adress dose not exist!'
+        break;
+      case 'INVALID_PASSWORD':
+        errorMessage = 'Invalid password please try again!'
+    }
+    return throwError(errorMessage);
   }
 }
 
@@ -57,7 +64,7 @@ this is totaly optional but its allwais good to do this, now we can pas this to 
 --> auth.component.ts
 
 error mesage improove
-In firebase we have several error messages we can check with a swich statement btwen them, we can do this in the componenet but is much leaner to do this in service using pipe and rgx operators like catchError and trowErrow 
+In firebase we have several error messages we can check with a swich statement btwen them, we can do this in the componenet but is much leaner to do this in service using pipe and rgx operators like catchError and trowErrow
 
 we can check if the error response dose not have a error key to avoid the switch to fail and we will trow erro (an abservabele that wraps ower error message) otherwise we will make it in to the switch.
 
