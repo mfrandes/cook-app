@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 interface AuthResponseData{
   kind: string,
@@ -23,7 +25,17 @@ export class AuthService {
       email: email,
       password: password,
       returnSecureToken: true
-    })
+    }).pipe(catchError( errorRes => {
+      let errorMessage = 'An unknown error accurred!';
+      if(!errorRes.error || !errorRes.error.error){
+        return throwError(errorMessage);
+      }
+      switch(errorRes.error.error.message){
+        case 'EMAIL_EXISTS':
+          errorMessage = 'This email already in use!'
+      }
+      return throwError(errorMessage);
+    }))
   }
 }
 
@@ -34,4 +46,11 @@ we need to subscribe to the post request so we need to return the post in order 
 We can define a form of the data we get back, we need a new interface that defines how such a object lock like in this case it has 6 proprieties
 this is totaly optional but its allwais good to do this, now we can pas this to ower hhtp request this is helpful wen we want to work with this response.
 --> auth.component.ts
+
+error mesage improove
+In firebase we have several error messages we can check with a swich statement btwen them, we can do this in the componenet but is much leaner to do this in service using pipe and rgx operators like catchError and trowErrow 
+
+we can check if the error response dose not have a error key to avoid the switch to fail and we will trow erro (an abservabele that wraps ower error message) otherwise we will make it in to the switch.
+
+Now that the error conversion happens in the authService, in the auth componenet in the error case we get only a observable that includes one error message we can provide it to our template
 */
