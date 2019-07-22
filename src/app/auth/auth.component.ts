@@ -1,9 +1,10 @@
-import { Component, OnInit, ComponentFactoryResolver } from '@angular/core';
+import { Component, OnInit, ComponentFactoryResolver, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService, AuthResponseData } from './auth.service';
 import { Observable } from 'rxjs';
 import { AlertComponent } from '../shared/alert/alert.component';
+import { PlaceholderDirective } from '../shared/placeholder/placeholder.directive';
 
 
 @Component({
@@ -15,6 +16,7 @@ export class AuthComponent implements OnInit {
   isLogIn = true;
   isLoading = false;
   error: string = null;
+  @ViewChild(PlaceholderDirective, { static: false }) allertHost: PlaceholderDirective;
 
   constructor(private authService: AuthService, private router: Router, private componentFactoryResolver: ComponentFactoryResolver) { }
 
@@ -39,7 +41,7 @@ export class AuthComponent implements OnInit {
     if (this.isLogIn) {
       authObs = this.authService.login(email, password);
     } else {
-      authObs = this.authService.signup(email, password);      
+      authObs = this.authService.signup(email, password);
     }
 
     authObs.subscribe(
@@ -56,15 +58,18 @@ export class AuthComponent implements OnInit {
     )
     form.reset();
   }
-  onHandleError(){
+  onHandleError() {
     this.error = null;
   }
 
-private showErrorAlert(message: string){
-  //const alertCmp = new AlertComponent(); this will not work we need component factory
-  const alertCmpFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
-  
-}
+  private showErrorAlert(message: string) {
+    //const alertCmp = new AlertComponent(); this will not work we need component factory
+    const alertCmpFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+    const hostViewContainerRef = this.allertHost.viewContainerRef;
+    hostViewContainerRef.clear();
+
+    hostViewContainerRef.createComponent(alertCmpFactory);
+  }
 
 }
 
@@ -77,10 +82,10 @@ we should do sumething about the is loging we will check if we are logging (here
 we allwais want to reset the form after the submit
  */
 
- /* 
- Adding a loading spinner we can make a new component in a shared folder, we need only the ts file and the css file 
- 
- */
+/*
+Adding a loading spinner we can make a new component in a shared folder, we need only the ts file and the css file
+
+*/
 /*
 Error handling
 We want to show a error message
