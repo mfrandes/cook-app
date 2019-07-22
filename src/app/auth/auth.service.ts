@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, tap } from 'rxjs/operators';
 import { throwError, BehaviorSubject } from 'rxjs';
 import { User } from './user.module';
+import { Router } from '@angular/router';
 
 export interface AuthResponseData {
   kind: string,
@@ -20,7 +21,7 @@ export interface AuthResponseData {
 export class AuthService {
   user = new BehaviorSubject<User>(null); 
 /* Behavior subject allows us to subscribe even at a latere time long after the subject was fired */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   signup(email: string, password: string) {
     return this.http.post<AuthResponseData>('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB2QU8W9bPNv-vnkX_7YA6gSZOcEfqdhqk',
@@ -88,6 +89,11 @@ export class AuthService {
         errorMessage = 'Invalid password please try again!'
     }
     return throwError(errorMessage);
+  }
+
+  logout(){
+    this.user.next(null);
+    this.router.navigate(['/auth']);
   }
 }
 
