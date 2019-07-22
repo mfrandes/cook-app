@@ -21,6 +21,7 @@ export interface AuthResponseData {
 export class AuthService {
   user = new BehaviorSubject<User>(null); 
 /* Behavior subject allows us to subscribe even at a latere time long after the subject was fired */
+
   constructor(private http: HttpClient, private router: Router) { }
 
   signup(email: string, password: string) {
@@ -69,8 +70,9 @@ export class AuthService {
     const expirationDate = new Date(
       new Date().getTime() + expiresIn * 1000
     )
-    const user = new User(email, id, token, expirationDate)
-    this.user.next(user)
+    const user = new User(email, id, token, expirationDate);
+    this.user.next(user);
+    localStorage.setItem('userData', JSON.stringify(user))
   }
 
   private hadleError(errorRes: HttpErrorResponse) {
@@ -89,6 +91,26 @@ export class AuthService {
         errorMessage = 'Invalid password please try again!'
     }
     return throwError(errorMessage);
+  }
+  autoLogin(){
+    const userData: {
+      email: string,
+      id: string,
+      _token: string,
+      _tokenExpirationDate: string
+    } = JSON.parse(localStorage.getItem('userData'));
+    if(!userData){
+      return;
+    }
+    const loadedUser = new User(
+      userData.email,
+      userData.id,
+      userData._token,
+      new Date(userData._tokenExpirationDate)
+    )
+    if (loadedUser.token){
+      this.user.next(loadedUser)
+    }
   }
 
   logout(){
