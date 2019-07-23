@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './shopping-edit.component.html',
   styleUrls: ['./shopping-edit.component.css']
 })
-export class SoppingEditComponent implements OnInit, OnDestroy {
+export class ShoppingEditComponent implements OnInit, OnDestroy {
   @ViewChild('f', { static: false }) slForm: NgForm;
   subscription: Subscription;
   editMode = false;
