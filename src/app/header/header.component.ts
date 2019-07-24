@@ -12,8 +12,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     @Output() featureSelected = new EventEmitter<string>();
     isAutheticated = false;
     private userSub: Subscription;
+    collapsed = true;
 
     constructor(private dataStorage: DataStorageService, private authService: AuthService) { }
+    
+    
 
     ngOnInit(){
         this.authService.user.subscribe(user => {
