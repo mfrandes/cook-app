@@ -1,7 +1,6 @@
-import { Action } from '@ngrx/store';
 
 import { Ingredient } from '../../shared/ingredient.model';
-import { ADD_INGREDIENT } from './shoppinglist.actions';
+import * as ShoppinglistActions from './shoppinglist.actions';
 
 
 const initialState = {
@@ -11,12 +10,12 @@ const initialState = {
     ]
 };
 
-export function shoppingListReducer(state = initialState, action : Action) {
+export function shoppingListReducer(state = initialState, action : ShoppinglistActions.AddIngredient) {
     switch(action.type) {
-        case ADD_INGREDIENT:
+        case ShoppinglistActions.ADD_INGREDIENT:
             return {
                 ...state, //this copies the old state this is a good practice 
-                ingredients: [...state.ingredients, action]
+                ingredients: [...state.ingredients, action.payload]
             }
     }
 }
