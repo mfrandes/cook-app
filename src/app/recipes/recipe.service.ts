@@ -1,14 +1,18 @@
 import {  Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Subject } from 'rxjs';
+
 import { Recipe } from './recipes.model';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
-import { Subject } from 'rxjs';
+import * as ShoppingListActions from '../shopping-list/store/shoppinglist.actions';
 
 @Injectable()
 export class RecipeService {
     recipesChanged = new Subject<Recipe[]>();
 
-    constructor(private slService: ShoppingListService) { }
+    constructor(private slService: ShoppingListService,
+                private store: Store<{shoppingList: {ingredients: Ingredient[]}}>) { }
 /*
     private recipes: Recipe[] = [
         new Recipe('A tasty Schnitzel', 'A super tasty Schnitzel - just awsume!', 'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
@@ -34,7 +38,8 @@ export class RecipeService {
         return this.recipes[index];
     }
     addIngredientsToShoppingList(ingredients: Ingredient[]) {
-this.slService.addIngredients(ingredients)
+        //this.slService.addIngredients(ingredients)
+        this.store.dispatch(new ShoppingListActions.addIngredients(ingredients))
     }
     addRecipe(recipe: Recipe){
         this.recipes.push(recipe);
