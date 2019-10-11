@@ -5,14 +5,15 @@ import { Subject } from 'rxjs';
 import { Recipe } from './recipes.model';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
-import * as ShoppingListActions from '../shopping-list/store/shoppinglist.actions';
+import * as ShoppingListActions from '../shopping-list/store/shopping-list.actions';
+import * as fromShoppingList from '../shopping-list/store/shopping-list.reducer'
 
 @Injectable()
 export class RecipeService {
     recipesChanged = new Subject<Recipe[]>();
 
     constructor(private slService: ShoppingListService,
-                private store: Store<{shoppingList: {ingredients: Ingredient[]}}>) { }
+                private store: Store<fromShoppingList.AppState>) { }
 /*
     private recipes: Recipe[] = [
         new Recipe('A tasty Schnitzel', 'A super tasty Schnitzel - just awsume!', 'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
